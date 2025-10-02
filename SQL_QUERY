@@ -1,0 +1,27 @@
+CREATE DATABASE PetrolPumpLog;
+GO
+
+USE PetrolPumpLog;
+GO
+
+-- Table to store users (single test user)
+CREATE TABLE [dbo].[Users] (
+    [Id] INT IDENTITY(1,1) PRIMARY KEY,
+    [Username] NVARCHAR(100) NOT NULL UNIQUE,
+    [PasswordHash] NVARCHAR(300) NOT NULL -- for simplicity you can store plaintext for test, but use hashing in real apps
+);
+
+-- Insert a test user (username: admin, password: P@ssw0rd) -- change as needed.
+INSERT INTO [dbo].[Users] (Username, PasswordHash) VALUES ('admin', 'Admin@123');
+
+-- Table to store dispensing records
+CREATE TABLE [dbo].[DispensingRecords] (
+    [Id] INT IDENTITY(1,1) PRIMARY KEY,
+    [DispenserNo] NVARCHAR(10) NOT NULL,       -- e.g., D-01
+    [QuantityLiters] DECIMAL(10,2) NOT NULL,   -- e.g., 10.50
+    [VehicleNumber] NVARCHAR(50) NOT NULL,
+    [PaymentMode] NVARCHAR(20) NOT NULL,       -- Cash, Credit Card, UPI
+    [PaymentProofFileName] NVARCHAR(260),      -- filename stored on server
+    [CreatedAt] DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
+);
+GO
