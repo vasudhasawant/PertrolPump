@@ -1,0 +1,154 @@
+create database TaskManagement
+
+use TaskManagement
+create table Employee
+(
+id int identity primary key,
+employeename varchar(100) not null,
+username varchar(20) not null unique,
+password varchar(20) not null,
+department varchar(20),
+designation varchar(20)
+)
+insert into employee values('vasudha','vasu','admin@12345','IT','Software Developer')
+select * from Employee
+
+Install package -Microsoft.EntityFrameworkCore.SqlServer
+                 Microsoft.EntityFrameworkCore.Tools
+
+Package Manage console-
+Scaffold-DbContext "Server=VASUDHA\SQLEXPRESS;Database=TaskManagement;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Context ApplicationDbContext
+
+write a connection string in -
+appsettings.json
+
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=VASUDHA\\SQLEXPRESS;Database=sample;Trusted_Connection=True;"
+  },
+
+Program.cs file
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+
+Add new Controller Account-empty
+
+
+ public class AccountController : Controller
+ {
+    
+     private readonly ApplicationDbContext _context; 
+
+         public AccountController(ApplicationDbContext context)
+     {
+         _context = context;
+     }
+
+   
+     public IActionResult Login()
+     {
+         return View();      //Add Login View
+     }
+
+
+     [HttpPost]
+     public IActionResult Login(string UserName, string Password)
+     {
+         var user = _context.Employees
+             .FirstOrDefault(u => u.Username == UserName && u.Password == Password);
+
+         if (user != null)
+         {
+             return RedirectToAction("Dashboard", new { id = user.Id });
+         }
+
+         ViewBag.Error = "Invalid username or password!";
+         return View();
+     }
+
+     public IActionResult Dashboard(int id)
+     {
+         var employee = _context.Employees.FirstOrDefault(e => e.Id == id);
+         if (employee == null) return NotFound();
+
+         return View(employee);  //Add Dashboard View
+
+     }
+
+ }
+
+
+Login.Cshtml(LoginView)
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+<form method="post" asp-controller="Account" asp-action="Login">
+    <table border="1" cellpadding="10" cellspacing="2">
+        <tr>
+            <td><label>User Name</label></td>
+            <td><input type="text" name="UserName" required /></td>
+        </tr>
+        <tr>
+            <td><label>Password</label></td>
+            <td><input type="password" name="Password" required /></td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <button type="submit">Login</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <script>
+        alert("@ViewBag.Error");
+    </script>
+}
+
+Dashboard.cshtml
+
+@model TaskManagement.Models.Employee
+
+<h2>Employee Details</h2>
+
+<table border="1" cellpadding="8" cellspacing="2">
+    <tr>
+        <th>Employee Name</th>
+        <td>@Model.Employeename</td>
+    </tr>
+    <tr>
+        <th>Department</th>
+        <td>@Model.Department</td>
+    </tr>
+    <tr>
+        <th>Designation</th>
+        <td>@Model.Designation</td>
+    </tr>
+</table>
+
+
+<a asp-controller="Account" asp-action="Login" class="btn btn-primary">Back</a>
+
+
+
+program.cs
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Account}/{action=Login}/{id?}");
+
+
+
+
+
+
+
+
+

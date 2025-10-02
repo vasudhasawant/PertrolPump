@@ -1,0 +1,91 @@
+﻿@model PetrolPumpLog.Models.LoginRequest
+
+<div class="login-container">
+    <h2>Login</h2>
+
+    <form asp-action="Login" method="post" class="login-form">
+        <div class="form-group">
+            <label asp-for="Username">Username</label>
+            <input asp-for="Username" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password">Password</label>
+            <input asp-for="Password" type="password" />
+        </div>
+
+        <div class="form-group">
+            <button type="submit">Login</button>
+        </div>
+    </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <p class="error">@ViewBag.Error</p>
+    }
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f6f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .login-container {
+        background-color: white;
+        padding: 30px 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        width: 350px;
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+    .login-form .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .login-form label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .login-form input {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    .login-form button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .login-form button:hover {
+            background-color: #0056b3;
+        }
+
+    .error {
+        color: red;
+        margin-top: 15px;
+    }
+</style>

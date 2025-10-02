@@ -1,0 +1,158 @@
+﻿@model IEnumerable<PetrolPumpLog.Models.DispensingRecord>
+
+<h2>Dispensing Records</h2>
+
+<!-- Filter Form -->
+<form class="filter-form" method="get" asp-action="Index">
+    <label>Dispenser No:</label>
+    <select name="dispenserNo">
+        <option value="">All</option>
+        <option value="D-01">D-01</option>
+        <option value="D-02">D-02</option>
+        <option value="D-03">D-03</option>
+        <option value="D-04">D-04</option>
+    </select>
+
+    <label>Payment Mode:</label>
+    <select name="paymentMode">
+        <option value="">All</option>
+        <option>Cash</option>
+        <option>Credit Card</option>
+        <option>UPI</option>
+    </select>
+
+    <label>Start Date:</label>
+    <input type="date" name="startDate" />
+
+    <label>End Date:</label>
+    <input type="date" name="endDate" />
+
+    <button type="submit">Filter</button>
+</form>
+
+<a class="btn-add" asp-action="Create">Add New Record</a>
+
+<table class="records-table">
+    <thead>
+        <tr>
+            <th>Dispenser No</th>
+            <th>Quantity</th>
+            <th>Vehicle Number</th>
+            <th>Payment Mode</th>
+            <th>Timestamp</th>
+            <th>Proof</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.DispenserNo</td>
+                <td>@r.QuantityLiters</td>
+                <td>@r.VehicleNumber</td>
+                <td>@r.PaymentMode</td>
+                <td>@r.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(r.PaymentProofFileName))
+                    {
+                        <a href="@r.PaymentProofFileName" target="_blank">View</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f6f8;
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .filter-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+
+        .filter-form label {
+            font-weight: bold;
+        }
+
+        .filter-form select,
+        .filter-form input {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .filter-form button {
+            padding: 6px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .filter-form button:hover {
+                background-color: #0056b3;
+            }
+
+    .btn-add {
+        display: inline-block;
+        margin-bottom: 15px;
+        padding: 8px 15px;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+
+        .btn-add:hover {
+            background-color: #1e7e34;
+        }
+
+    .records-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+    }
+
+        .records-table th,
+        .records-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .records-table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .records-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .records-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .records-table a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+            .records-table a:hover {
+                text-decoration: underline;
+            }
+
+</style>
